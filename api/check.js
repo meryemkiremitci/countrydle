@@ -43,10 +43,11 @@ async function askGemini(guess, length) {
       generationConfig: {
         temperature: 0,
         responseMimeType: 'application/json',
-        // The enum forces the answer to be one of our real country names.
+        // A 195-item enum makes Gemini return 400 INVALID_ARGUMENT, so the schema
+        // only fixes the shape; the answer is checked against COUNTRY_NAMES below.
         responseSchema: {
           type: 'OBJECT',
-          properties: { country: { type: 'STRING', enum: [...COUNTRY_NAMES, NONE] } },
+          properties: { country: { type: 'STRING' } },
           required: ['country'],
         },
       },
