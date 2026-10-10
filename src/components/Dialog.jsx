@@ -55,10 +55,11 @@ export default function Dialog({ dialog, length, onAccept, onClose }) {
         <div className="dialog-actions">
           {isSuggestion ? (
             <>
-              <button className="btn secondary" onClick={onClose}>
+              {/* Focus starts on "Hayır" so an accidental Enter does not accept the suggestion. */}
+              <button className="btn secondary" onClick={onClose} autoFocus>
                 Hayır
               </button>
-              <button className="btn primary" onClick={onAccept} autoFocus>
+              <button className="btn primary" onClick={onAccept}>
                 Evet, {country.name} tahmin et
               </button>
             </>
