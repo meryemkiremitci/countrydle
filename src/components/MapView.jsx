@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+const cartoKey = import.meta.env.VITE_CARTO_API_KEY;
+const tileUrl = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=${cartoKey}`;
 
 // Country borders are ~700KB, so they are loaded lazily after first render.
 let shapesPromise;
@@ -24,7 +26,7 @@ export default function MapView({ markers, selected, onSelect }) {
 
   useEffect(() => {
     const map = L.map(containerRef.current, { worldCopyJump: true, minZoom: 1 }).setView([25, 10], 1);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    L.tileLayer(tileUrl, {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',

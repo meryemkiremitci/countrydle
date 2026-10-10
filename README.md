@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Countrydle 🌍
 
 Ülke temalı Wordle. Gizli ülkeyi 6 denemede bul. Yapay zekâ hakem (Gemini), yanlış yazılan ülkeleri tanıyıp
@@ -51,3 +52,7 @@ scripts/build-countries.mjs  Ülke verisini yeniden üretir: npm run build:count
 
 Veri kaynakları: [mledoze/countries](https://github.com/mledoze/countries) (ODbL), Dünya Bankası (nüfus),
 [world-atlas](https://github.com/topojson/world-atlas) / Natural Earth (sınırlar), harita © OpenStreetMap & CARTO.
+=======
+# countrydle-
+Country-themed Wordle with an AI referee: guess a country in 6 tries, get distance, direction and proximity hints, and see each country on a map.
+>>>>>>> 139197154e714e36b58659b3e7cfa622c521db0a
