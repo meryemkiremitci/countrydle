@@ -26,7 +26,7 @@ export default function Dialog({ dialog, length, onAccept, onClose }) {
     icon = '🤔';
     body = (
       <>
-        <b>{word}</b> diye bir ülke yok. Sanırım <b>{country.flag} {country.name}</b> demek istedin?
+        <b>{word}</b> is not a country name. Did you mean <b>{country.flag} {country.name}</b>?
       </>
     );
   } else if (dialog.type === 'wrong_length') {
@@ -34,21 +34,21 @@ export default function Dialog({ dialog, length, onAccept, onClose }) {
     body =
       wordOf(country) === word ? (
         <>
-          <b>{country.flag} {country.name}</b> gerçek bir ülke ama gizli ülke olamaz. Tek kelimelik {length} harfli
-          ülkeler arasından tahmin etmelisin.
+          <b>{country.flag} {country.name}</b> is a real country, but it cannot be the secret one. Guess a single-word
+          country with {length} letters.
         </>
       ) : (
         <>
-          Sanırım <b>{country.flag} {country.name}</b> demek istedin, ama o {wordOf(country).length} harfli. {length}{' '}
-          harfli bir ülke dene.
+          Did you mean <b>{country.flag} {country.name}</b>? It has {wordOf(country).length} letters, but the answer has{' '}
+          {length}. Try a {length}-letter country.
         </>
       );
   } else {
     icon = '🌍';
     body = (
       <>
-        <b>{word}</b> bir ülke ismine benzemiyor. Bu oyunun teması <b>ülkeler</b>.
-        {dialog.offline && <span className="dialog-note"> (Yapay zekâ hakeme şu an ulaşılamıyor, yerel kontrol yapıldı.)</span>}
+        <b>{word}</b> does not look like a country name. This game's theme is <b>countries</b>.
+        {dialog.offline && <span className="dialog-note"> (The AI referee is unavailable right now, so a local check was used.)</span>}
       </>
     );
   }
@@ -65,20 +65,20 @@ export default function Dialog({ dialog, length, onAccept, onClose }) {
       >
         <div className="dialog-icon">{icon}</div>
         <p>{body}</p>
-        <p className="dialog-note">Bu deneme hakkından düşmedi.</p>
+        <p className="dialog-note">This did not cost you a guess.</p>
         <div className="dialog-actions">
           {isSuggestion ? (
             <>
               <button className="btn secondary" onClick={onClose}>
-                Hayır
+                No
               </button>
               <button className="btn primary" onClick={onAccept}>
-                Evet, {country.name} tahmin et
+                Yes, guess {country.name}
               </button>
             </>
           ) : (
             <button className="btn primary" onClick={onClose}>
-              Tamam
+              OK
             </button>
           )}
         </div>

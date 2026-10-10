@@ -2,30 +2,31 @@ export default function Help({ length, onClose }) {
   return (
     <div className="overlay" onClick={onClose}>
       <div className="dialog help" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
-        <h2>Nasıl oynanır?</h2>
+        <h2>How to play</h2>
         <p>
-          Gizli ülkeyi 6 denemede bul. Tahminler <b>{length} harfli, İngilizce</b> ülke isimleri olmalı (ör. JAPAN, CHILE).
+          Find the secret country in 6 guesses. Guesses must be <b>{length}-letter English country names</b> (e.g. JAPAN,
+          CHILE).
         </p>
         <div className="help-tiles">
-          <div className="tile correct">J</div> harf doğru yerde
+          <div className="tile correct">J</div> letter is in the right spot
         </div>
         <div className="help-tiles">
-          <div className="tile present">A</div> harf kelimede var ama başka yerde
+          <div className="tile present">A</div> letter is in the country but in another spot
         </div>
         <div className="help-tiles">
-          <div className="tile absent">N</div> harf kelimede yok
+          <div className="tile absent">N</div> letter is not in the country
         </div>
         <p>
-          Her tahminin yanında gizli ülkeye olan <b>mesafe</b>, <b>yön</b> ve <b>yakınlık yüzdesi</b> görünür. Tahmin ettiğin
-          ülkeler haritada işaretlenir; birine tıklayınca bilgilerini görürsün.
+          Next to each guess you see the <b>distance</b>, <b>direction</b> and <b>proximity</b> to the secret country.
+          Guessed countries are marked on the map; click one to see its details.
         </p>
         <p>
-          🤖 Yapay zekâ hakem, yanlış yazdığın ülkeleri tanır ve <i>"Sanırım şunu demek istedin"</i> der. Ülke olmayan
-          kelimeler ve yanlış uzunluktaki ülkeler deneme hakkından düşmez.
+          🤖 The AI referee recognizes misspelled country names and asks <i>"Did you mean ...?"</i>. Words that are not
+          countries, and countries with the wrong number of letters, do not cost you a guess.
         </p>
         <div className="dialog-actions">
           <button className="btn primary" onClick={onClose} autoFocus>
-            Anladım
+            Got it
           </button>
         </div>
       </div>

@@ -18,7 +18,6 @@ const countries = raw
   .map((c) => ({
     name: c.name.common,
     official: c.name.official,
-    trName: c.translations?.tur?.common || null,
     cca2: c.cca2,
     ccn3: c.ccn3 || null,
     capital: c.capital?.[0] || null,

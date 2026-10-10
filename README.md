@@ -1,53 +1,53 @@
 # Countrydle 🌍
 
-Ülke temalı Wordle. Gizli ülkeyi 6 denemede bul. Yapay zekâ hakem (Gemini), yanlış yazılan ülkeleri tanıyıp
-"Sanırım şunu demek istedin" der ve temadan alakasız kelimeleri hak düşürmeden reddeder. Her tahmin haritada
-işaretlenir ve gizli ülkeye olan mesafe, yön ve yakınlık gösterilir.
+Country-themed Wordle with an AI referee. Find the secret country in 6 guesses. Gemini recognizes misspelled
+country names and asks "Did you mean ...?", and it rejects off-theme words without costing you a guess. Every guess
+is marked on a map, along with its distance, direction and proximity to the secret country.
 
-## Nasıl çalışır?
+## How it works
 
-Bir tahmin şu sırayla kontrol edilir (`src/lib/checkGuess.js`):
+Each guess is checked in this order (`src/lib/checkGuess.js`):
 
-1. **Tam eşleşme:** `CHILE` gibi geçerli bir ülkeyse doğrudan kabul edilir.
-2. **Alternatif isim:** Türkçe veya resmi isimler (`MISIR` → Egypt, `BURMA` → Myanmar) yerelde tanınır.
-3. **Basit yazım hatası:** Tek harf farkı (`JAPAM` → Japan) yerelde düzeltilir.
-4. **Gemini:** Yukarıdakiler karar veremezse `/api/check` üzerinden Gemini'ye sorulur. Cevap, gerçek ülke
-   isimlerinden oluşan bir listeyle sınırlıdır, yani model ülke uyduramaz.
-5. **Gemini'ye ulaşılamazsa** (key yok, kota dolu): oyun daha esnek bir yerel eşleştirmeyle devam eder.
+1. **Exact match:** `CHILE` is accepted directly if it is a valid country of the right length.
+2. **Alternative names:** official names and alternative spellings (e.g. `BURMA` → Myanmar) are recognized locally.
+3. **Simple typo:** a one-letter difference (e.g. `JAPAM` → Japan) is corrected locally, after asking you to confirm.
+4. **Gemini:** if the checks above cannot decide, the word is sent to `/api/check`, which asks Gemini. The answer is
+   restricted to real country names, so the model cannot invent one.
+5. **If Gemini is unavailable** (no key, quota reached): a looser local match keeps the game running.
 
-Harf renklendirme ve mesafe hesabı her zaman kodda yapılır, LLM'e bırakılmaz.
+Letter coloring and distance calculations always run in code. The LLM is never used for them.
 
-## Yerelde çalıştırma
+## Running locally
 
 ```bash
 npm install
 cp .env.example .env      # Windows: copy .env.example .env
-# .env dosyasına GEMINI_API_KEY'i yaz (https://aistudio.google.com/apikey)
+# put your GEMINI_API_KEY in .env (https://aistudio.google.com/apikey)
 npm run dev
 ```
 
-Tarayıcıda http://localhost:5173 adresini aç. Key olmadan da oyun çalışır, sadece Gemini kontrolü yerine yerel kontrol kullanılır.
+Open http://localhost:5173. The game also works without a key; it then uses only the local checks.
 
-## Yayınlama (Vercel, ücretsiz)
+## Deploying (Vercel, free)
 
-1. Projeyi GitHub'a yükle.
-2. [vercel.com](https://vercel.com)'a GitHub hesabınla gir → **Add New → Project** → bu repoyu seç.
-   Vite projesi otomatik tanınır, ayar değiştirmene gerek yok.
-3. **Environment Variables** kısmına `GEMINI_API_KEY` ekle → **Deploy**.
-4. Çıkan `xxx.vercel.app` adresini paylaş. Sonraki her `git push` otomatik olarak yayına girer.
+1. Push the project to GitHub.
+2. Sign in to [vercel.com](https://vercel.com) with GitHub → **Add New → Project** → select this repository.
+   Vite projects are detected automatically; no build settings need to change.
+3. Add `GEMINI_API_KEY` under **Environment Variables**, then **Deploy**.
+4. Share the `xxx.vercel.app` address. Every later `git push` is deployed automatically.
 
-## Proje yapısı
+## Project structure
 
 ```
-api/check.js              Gemini'yi çağıran sunucu fonksiyonu (key burada gizli kalır)
-api/_countries.js         Ülke isimleri listesi (otomatik üretilir)
-src/data/countries.json   Ülke verisi (otomatik üretilir)
-src/lib/checkGuess.js     Tahmin kontrol akışı (yerel → Gemini → yedek)
-src/lib/countries.js      Ülke arama, alternatif isimler, yazım hatası eşleştirme
-src/lib/game.js           Wordle renklendirme, mesafe/yön/yakınlık
-src/components/           Tahta, klavye, harita, bilgi kartı, diyaloglar
-scripts/build-countries.mjs  Ülke verisini yeniden üretir: npm run build:countries
+api/check.js              Serverless function that calls Gemini (the key stays on the server)
+api/_countries.js         Country name list (generated)
+src/data/countries.json   Country data (generated)
+src/lib/checkGuess.js     Guess checking flow (local → Gemini → fallback)
+src/lib/countries.js      Country lookup, alternative names, typo matching
+src/lib/game.js           Wordle scoring, distance/direction/proximity
+src/components/           Board, keyboard, map, country card, dialogs
+scripts/build-countries.mjs  Regenerates the country data: npm run build:countries
 ```
 
-Veri kaynakları: [mledoze/countries](https://github.com/mledoze/countries) (ODbL), Dünya Bankası (nüfus),
-[world-atlas](https://github.com/topojson/world-atlas) / Natural Earth (sınırlar), harita © OpenStreetMap & CARTO.
+Data sources: [mledoze/countries](https://github.com/mledoze/countries) (ODbL), World Bank (population),
+[world-atlas](https://github.com/topojson/world-atlas) / Natural Earth (borders), map © OpenStreetMap & CARTO.

@@ -45,7 +45,7 @@ export default function App() {
 
   const commit = useCallback(
     (country) => {
-      if (guesses.some((g) => g.country === country)) return flash(`${country.name} zaten denendi`);
+      if (guesses.some((g) => g.country === country)) return flash(`${country.name} was already guessed`);
       const word = wordOf(country);
       const won = country === answer;
       const next = [...guesses, { word, country, score: scoreGuess(word, wordOf(answer)), hint: hint(country, answer), won }];
@@ -58,7 +58,7 @@ export default function App() {
   );
 
   const submit = useCallback(async () => {
-    if (current.length < LENGTH) return flash(`Ülke ismi ${LENGTH} harfli olmalı`);
+    if (current.length < LENGTH) return flash(`Country name must be ${LENGTH} letters`);
     setPending(true);
     const result = await checkGuess(current, ANSWERS);
     setPending(false);
@@ -72,7 +72,7 @@ export default function App() {
       if (key === 'Enter') submit();
       else if (key === 'Backspace') setCurrent((c) => c.slice(0, -1));
       else {
-        const letter = normalize(key); // Turkish letters like "ş" become "S"
+        const letter = normalize(key); // accented letters are reduced to their base letter
         if (letter.length === 1) setCurrent((c) => (c.length < LENGTH ? c + letter : c));
       }
     },
@@ -106,9 +106,9 @@ export default function App() {
     const list = guesses.map((g) => ({
       country: g.country,
       color: g.won ? ANSWER_COLOR : proximityColor(g.hint.proximity),
-      label: `${g.country.flag} ${g.country.name}${g.won ? ' 🎉' : ` · ${g.hint.km.toLocaleString('tr-TR')} km ${g.hint.arrow}`}`,
+      label: `${g.country.flag} ${g.country.name}${g.won ? ' 🎉' : ` · ${g.hint.km.toLocaleString('en-US')} km ${g.hint.arrow}`}`,
     }));
-    if (status === 'lost') list.push({ country: answer, color: ANSWER_COLOR, label: `${answer.flag} ${answer.name} (gizli ülke)` });
+    if (status === 'lost') list.push({ country: answer, color: ANSWER_COLOR, label: `${answer.flag} ${answer.name} (secret)` });
     return list;
   }, [guesses, status, answer]);
 
@@ -124,14 +124,14 @@ export default function App() {
 
   async function share() {
     const lines = guesses.map(
-      (g) => g.score.map((s) => EMOJI[s]).join('') + (g.won ? ' 🎉' : ` ${g.hint.km.toLocaleString('tr-TR')} km ${g.hint.arrow}`),
+      (g) => g.score.map((s) => EMOJI[s]).join('') + (g.won ? ' 🎉' : ` ${g.hint.km.toLocaleString('en-US')} km ${g.hint.arrow}`),
     );
     const text = `Countrydle 🌍 ${status === 'won' ? guesses.length : 'X'}/${MAX_GUESSES}\n${lines.join('\n')}\n${location.href}`;
     try {
       await navigator.clipboard.writeText(text);
-      setToast('Sonuç panoya kopyalandı');
+      setToast('Result copied to clipboard');
     } catch {
-      setToast('Kopyalanamadı');
+      setToast('Could not copy');
     }
   }
 
@@ -140,13 +140,13 @@ export default function App() {
       <header>
         <div className="brand">
           <h1>COUNTRYDLE</h1>
-          <span className="theme-chip">🌍 Tema: Ülkeler · {LENGTH} harf</span>
+          <span className="theme-chip">🌍 Theme: Countries · {LENGTH} letters</span>
         </div>
         <div className="header-actions">
-          <button className="icon-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => setShowHelp(true)} aria-label="Nasıl oynanır">
+          <button className="icon-btn" onMouseDown={(e) => e.preventDefault()} onClick={() => setShowHelp(true)} aria-label="How to play">
             ?
           </button>
-          <button className="icon-btn" onMouseDown={(e) => e.preventDefault()} onClick={restart} aria-label="Yeni oyun" title="Yeni oyun">
+          <button className="icon-btn" onMouseDown={(e) => e.preventDefault()} onClick={restart} aria-label="New game" title="New game">
             ↻
           </button>
         </div>
@@ -163,7 +163,7 @@ export default function App() {
             onSelect={setSelected}
           />
           <div className="status-line">
-            {pending && <span className="checking">🤖 Hakem kontrol ediyor…</span>}
+            {pending && <span className="checking">🤖 Referee is checking…</span>}
             {toast && <span className="toast">{toast}</span>}
           </div>
           {status === 'playing' ? (
@@ -171,17 +171,17 @@ export default function App() {
           ) : (
             <div className={`result ${status}`}>
               <div className="result-title">
-                {status === 'won' ? `Tebrikler! ${guesses.length}/${MAX_GUESSES} denemede buldun 🎉` : 'Hakların bitti 😔'}
+                {status === 'won' ? `Well done! You found it in ${guesses.length}/${MAX_GUESSES} guesses 🎉` : 'Out of guesses 😔'}
               </div>
               <div>
-                Gizli ülke: <b>{answer.flag} {answer.name}</b>
+                The secret country was: <b>{answer.flag} {answer.name}</b>
               </div>
               <div className="result-actions">
                 <button className="btn secondary" onClick={share}>
-                  Sonucu paylaş
+                  Share result
                 </button>
                 <button className="btn primary" onClick={restart}>
-                  Yeni oyun
+                  New game
                 </button>
               </div>
             </div>

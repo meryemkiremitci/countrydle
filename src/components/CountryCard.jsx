@@ -1,21 +1,10 @@
-const REGIONS_TR = {
-  Africa: 'Afrika',
-  Americas: 'Amerika',
-  Asia: 'Asya',
-  Europe: 'Avrupa',
-  Oceania: 'Okyanusya',
-  Antarctic: 'Antarktika',
-};
-
-const fmt = (n) => (n == null ? '—' : n.toLocaleString('tr-TR'));
-const capitalize = (s) => s && s.charAt(0).toLocaleUpperCase('tr') + s.slice(1);
+const fmt = (n) => (n == null ? '—' : n.toLocaleString('en-US'));
 
 export default function CountryCard({ country, hint, isAnswer }) {
   if (!country) {
     return (
       <div className="card placeholder">
-        Bir tahmin yaptığında ülkenin bilgileri burada görünecek. Önceki tahminlere tıklayarak bilgilerine tekrar
-        bakabilirsin.
+        Make a guess to see the country's details here. Click a previous guess to view it again.
       </div>
     );
   }
@@ -26,32 +15,30 @@ export default function CountryCard({ country, hint, isAnswer }) {
         <span className="card-flag">{country.flag}</span>
         <div>
           <h2>{country.name}</h2>
-          <div className="card-sub">
-            {capitalize(country.trName)} · {country.official}
-          </div>
+          <div className="card-sub">{country.official}</div>
         </div>
       </div>
       {hint && !isAnswer && (
         <div className="card-hint">
-          Hedef ülke buradan <b>{fmt(hint.km)} km</b> uzakta, yönü <b>{hint.arrow}</b> · yakınlık <b>%{hint.proximity}</b>
+          The secret country is <b>{fmt(hint.km)} km</b> away, direction <b>{hint.arrow}</b> · proximity <b>{hint.proximity}%</b>
         </div>
       )}
-      {isAnswer && <div className="card-hint win">Gizli ülke buydu!</div>}
+      {isAnswer && <div className="card-hint win">That was the secret country!</div>}
       <dl>
-        <dt>Başkent</dt>
+        <dt>Capital</dt>
         <dd>{country.capital || '—'}</dd>
-        <dt>Bölge</dt>
+        <dt>Region</dt>
         <dd>
-          {REGIONS_TR[country.region] || country.region}
+          {country.region}
           {country.subregion ? ` · ${country.subregion}` : ''}
         </dd>
-        <dt>Nüfus</dt>
+        <dt>Population</dt>
         <dd>{fmt(country.population)}</dd>
-        <dt>Yüzölçümü</dt>
+        <dt>Area</dt>
         <dd>{fmt(Math.round(country.area))} km²</dd>
-        <dt>Diller</dt>
+        <dt>Languages</dt>
         <dd>{country.languages.join(', ') || '—'}</dd>
-        <dt>Para birimi</dt>
+        <dt>Currency</dt>
         <dd>{country.currencies.join(', ') || '—'}</dd>
       </dl>
     </div>

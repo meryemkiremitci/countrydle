@@ -10,7 +10,7 @@ export default function Board({ guesses, current, length, shake, selected, onSel
           key={r}
           className={`row submitted ${selected === guess.country.cca2 ? 'selected' : ''}`}
           onClick={() => onSelect(guess.country.cca2)}
-          title={`${guess.country.name} hakkında bilgi`}
+          title={`Show details for ${guess.country.name}`}
         >
           <div className="tiles">
             {[...guess.word].map((ch, i) => (
@@ -24,7 +24,7 @@ export default function Board({ guesses, current, length, shake, selected, onSel
               <span className="hint-win">🎉</span>
             ) : (
               <>
-                <span>{guess.hint.km.toLocaleString('tr-TR')} km</span>
+                <span>{guess.hint.km.toLocaleString('en-US')} km</span>
                 <span className="hint-arrow">{guess.hint.arrow}</span>
                 <span>%{guess.hint.proximity}</span>
               </>

@@ -27,7 +27,7 @@ export default function Keyboard({ guesses, onKey }) {
             </button>
           ))}
           {r === 2 && (
-            <button className="key wide" {...NO_FOCUS} onClick={() => onKey('Backspace')} aria-label="Sil">
+            <button className="key wide" {...NO_FOCUS} onClick={() => onKey('Backspace')} aria-label="Delete">
               ⌫
             </button>
           )}

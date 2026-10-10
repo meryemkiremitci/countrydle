@@ -2,7 +2,7 @@ import COUNTRIES from '../data/countries.json';
 
 export { COUNTRIES };
 
-// "Côte d'Ivoire" -> "COTEDIVOIRE", Turkish keyboard input "şili" -> "SILI"
+// "Côte d'Ivoire" -> "COTEDIVOIRE", "Pérou" -> "PEROU" (accents are stripped from input)
 export function normalize(text) {
   return text
     .normalize('NFD')
@@ -17,10 +17,10 @@ export const byCode = new Map(COUNTRIES.map((c) => [c.cca2, c]));
 export const byName = new Map(COUNTRIES.map((c) => [c.name, c]));
 const byWord = new Map(COUNTRIES.map((c) => [wordOf(c), c]));
 
-// Official names, alternative spellings and Turkish names, e.g. "MISIR" -> Egypt.
+// Official names and alternative spellings, e.g. "BURMA" -> Myanmar.
 const byAlias = new Map();
 for (const c of COUNTRIES) {
-  for (const alias of [c.official, c.trName, ...c.altSpellings]) {
+  for (const alias of [c.official, ...c.altSpellings]) {
     const key = alias && normalize(alias);
     if (key && !byWord.has(key) && !byAlias.has(key)) byAlias.set(key, c);
   }
