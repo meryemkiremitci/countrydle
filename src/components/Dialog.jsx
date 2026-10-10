@@ -1,11 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { wordOf } from '../lib/countries.js';
 
 // Shows the referee's verdict: a suggestion, a wrong-length country or an off-theme word.
 export default function Dialog({ dialog, length, onAccept, onClose }) {
   const isSuggestion = dialog.type === 'suggest';
+  const boxRef = useRef(null);
 
-  // Enter is handled by the autofocused button; Escape closes.
+  // Focus the box, not a button: the Enter that opened the dialog would otherwise
+  // click a freshly focused button and close (or accept) the dialog instantly.
+  useEffect(() => {
+    boxRef.current?.focus();
+  }, []);
+
+  // Escape closes; Enter does nothing until the user Tabs to a button and presses it.
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -48,15 +55,21 @@ export default function Dialog({ dialog, length, onAccept, onClose }) {
 
   return (
     <div className="overlay" onClick={onClose}>
-      <div className="dialog" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+      <div
+        ref={boxRef}
+        className="dialog"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
         <div className="dialog-icon">{icon}</div>
         <p>{body}</p>
         <p className="dialog-note">Bu deneme hakkından düşmedi.</p>
         <div className="dialog-actions">
           {isSuggestion ? (
             <>
-              {/* Focus starts on "Hayır" so an accidental Enter does not accept the suggestion. */}
-              <button className="btn secondary" onClick={onClose} autoFocus>
+              <button className="btn secondary" onClick={onClose}>
                 Hayır
               </button>
               <button className="btn primary" onClick={onAccept}>
@@ -64,7 +77,7 @@ export default function Dialog({ dialog, length, onAccept, onClose }) {
               </button>
             </>
           ) : (
-            <button className="btn primary" onClick={onClose} autoFocus>
+            <button className="btn primary" onClick={onClose}>
               Tamam
             </button>
           )}
