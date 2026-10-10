@@ -96,7 +96,11 @@ export default function App() {
     setDialog(null);
     commit(country);
   }, [dialog, commit]);
-  const closeDialog = useCallback(() => setDialog(null), []);
+  // A rejected word leaves the board, so the input is cleared for the next one.
+  const closeDialog = useCallback(() => {
+    setDialog(null);
+    setCurrent('');
+  }, []);
 
   const markers = useMemo(() => {
     const list = guesses.map((g) => ({
